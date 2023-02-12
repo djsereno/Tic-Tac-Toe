@@ -17,14 +17,6 @@ const gameBoard = (() => {
     return _board[index];
   };
 
-  // const _convertToIndex = (row, col) => {
-  //   return row * 3 + col;
-  // };
-
-  // const _convertToRowCol = (index) => {
-  //   return [Math.floor(index / 3), index % 3];
-  // };
-
   const _checkGameOver = (player, index) => {
     if (_board.findIndex((val) => val === '') === -1) return 'Tie';
     if (_board[0] !== '' && _board[0] == _board[1] && _board[0] == _board[2]) return _board[0];
@@ -44,6 +36,10 @@ const gameBoard = (() => {
 const displayController = (() => {
   const _boardNode = document.querySelector('.board');
   const _gameResultNode = document.querySelector('.game-result');
+  const _player1Name = document.querySelector('#player1-name');
+  const _player1Score = document.querySelector('#player1-score');
+  const _player2Name = document.querySelector('#player2-name');
+  const _player2Score = document.querySelector('#player2-score');
 
   const renderBoard = () => {
     _clearBoard();
@@ -70,11 +66,9 @@ const displayController = (() => {
       if (player) event.currentTarget.innerText = player;
 
       const result = gameBoard.getWinner();
-      if (result) {
-        result === 'Tie'
-          ? (_gameResultNode.innerText = 'Tie Game!')
-          : (_gameResultNode.innerText = `${result} Wins!`);
-      }
+      if (result === 'Tie') _gameResultNode.innerText = 'Tie Game!';
+      if (result === 'X') _gameResultNode.innerText = `${_player1Name.value} Wins!`;
+      if (result === 'O') _gameResultNode.innerText = `${_player2Name.value} Wins!`;
     }
   };
 
