@@ -1,13 +1,19 @@
 const gameBoard = (() => {
-  const _board = Array(9).fill('');
-  let _currentPlayer = 'X';
-  let _winner = false;
+  const _board = Array(9);
+  let _currentPlayer;
+  let _winner;
 
   const display = () => console.table(_board);
   const getBoardArray = () => [..._board];
   const getCurrentPlayer = () => _currentPlayer;
   const getGameActive = () => _gameActive;
   const getWinner = () => _winner;
+
+  const initBoard = () => {
+    _board.fill('');
+    _currentPlayer = 'X';
+    _winner = false;
+  };
 
   const pickCell = (index) => {
     if (_board[index] !== '') return false;
@@ -30,16 +36,28 @@ const gameBoard = (() => {
     return false;
   };
 
-  return { getBoardArray, getCurrentPlayer, getWinner, getGameActive, pickCell, display };
+  initBoard();
+
+  return {
+    getBoardArray,
+    getCurrentPlayer,
+    getWinner,
+    getGameActive,
+    initBoard,
+    pickCell,
+    display,
+  };
 })();
 
-const displayController = (() => {
+const gameController = (() => {
   const _boardNode = document.querySelector('.board');
   const _gameResultNode = document.querySelector('.game-result');
   const _player1Name = document.querySelector('#player1-name');
   const _player1Score = document.querySelector('#player1-score');
   const _player2Name = document.querySelector('#player2-name');
   const _player2Score = document.querySelector('#player2-score');
+  const _newGameBtn = document.querySelector('.new-game');
+  const _newMatchBtn = document.querySelector('.new-match');
 
   const renderBoard = () => {
     _clearBoard();
@@ -67,12 +85,33 @@ const displayController = (() => {
 
       const result = gameBoard.getWinner();
       if (result === 'Tie') _gameResultNode.innerText = 'Tie Game!';
-      if (result === 'X') _gameResultNode.innerText = `${_player1Name.value} Wins!`;
-      if (result === 'O') _gameResultNode.innerText = `${_player2Name.value} Wins!`;
+      if (result === 'X') {
+        _gameResultNode.innerText = `${_player1Name.value} Wins!`;
+        _player1Score.innerText = +_player1Score.innerText + 1;
+      }
+      if (result === 'O') {
+        _gameResultNode.innerText = `${_player2Name.value} Wins!`;
+        _player2Score.innerText = +_player2Score.innerText + 1;
+      }
     }
   };
+
+  const _startNewGame = () => {
+    gameBoard.initBoard();
+    renderBoard();
+    _gameResultNode.innerText = '';
+  };
+
+  const _startNewMatch = () => {
+    _startNewGame();
+    _player1Score.innerText = 0;
+    _player2Score.innerText = 0;
+  };
+
+  _newGameBtn.addEventListener('click', _startNewGame);
+  _newMatchBtn.addEventListener('click', _startNewMatch);
 
   return { renderBoard };
 })();
 
-displayController.renderBoard();
+gameController.renderBoard();
