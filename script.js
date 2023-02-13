@@ -1,3 +1,24 @@
+const Player = (playerSymbol) => {
+  const symbol = playerSymbol;
+  let _score = 0;
+
+  const getScore = () => _score;
+  const initScore = () => {
+    _score = 0;
+    return _score;
+  };
+
+  const incrementScore = () => {
+    _score += 1;
+    return _score;
+  };
+
+  return { symbol, getScore, incrementScore, initScore };
+};
+
+player1 = Player('X');
+player2 = Player('O');
+
 const gameBoard = (() => {
   const _board = Array(9);
   let _currentPlayer;
@@ -11,19 +32,21 @@ const gameBoard = (() => {
 
   const initBoard = () => {
     _board.fill('');
-    _currentPlayer = 'X';
+    _player1 = player1.symbol;
+    _player2 = player2.symbol;
+    _currentPlayer = _player1;
     _winner = false;
   };
 
   const pickCell = (index) => {
     if (_board[index] !== '') return false;
     _board[index] = _currentPlayer;
-    _winner = _checkGameOver(_currentPlayer, index);
-    _currentPlayer === 'X' ? (_currentPlayer = 'O') : (_currentPlayer = 'X');
+    _winner = _checkWinner();
+    _currentPlayer === _player1 ? (_currentPlayer = _player2) : (_currentPlayer = _player1);
     return _board[index];
   };
 
-  const _checkGameOver = (player, index) => {
+  const _checkWinner = () => {
     if (_board.findIndex((val) => val === '') === -1) return 'Tie';
     if (_board[0] !== '' && _board[0] == _board[1] && _board[0] == _board[2]) return _board[0];
     if (_board[3] !== '' && _board[3] == _board[4] && _board[3] == _board[5]) return _board[3];
@@ -84,14 +107,14 @@ const gameController = (() => {
       if (player) event.currentTarget.innerText = player;
 
       const result = gameBoard.getWinner();
-      if (result === 'Tie') _gameResultNode.innerText = 'Tie Game!';
-      if (result === 'X') {
+      if (result === 'Tie') {
+        _gameResultNode.innerText = 'Tie Game!';
+      } else if (result === player1.symbol) {
+        _player1Score.innerText = player1.incrementScore();
         _gameResultNode.innerText = `${_player1Name.value} Wins!`;
-        _player1Score.innerText = +_player1Score.innerText + 1;
-      }
-      if (result === 'O') {
+      } else if (result === player2.symbol) {
+        _player2Score.innerText = player2.incrementScore();
         _gameResultNode.innerText = `${_player2Name.value} Wins!`;
-        _player2Score.innerText = +_player2Score.innerText + 1;
       }
     }
   };
@@ -104,8 +127,8 @@ const gameController = (() => {
 
   const _startNewMatch = () => {
     _startNewGame();
-    _player1Score.innerText = 0;
-    _player2Score.innerText = 0;
+    _player1Score.innerText = player1.initScore();
+    _player2Score.innerText = player2.initScore();
   };
 
   _newGameBtn.addEventListener('click', _startNewGame);
