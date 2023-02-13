@@ -4,6 +4,9 @@
   box-sizing: border-box;
 }
 
+:root {
+}
+
 .board {
   width: 400px;
   height: 400px;
@@ -23,17 +26,28 @@
   user-select: none;
 }
 
-
-
-
 /* SLIDER */
+:root {
+  /* these can be customized */
+  --slider-height: 28px;
+  --slider-padding: 4px;
+  --switch-width: var(--switch-height);
+  --switch-translate: var(--switch-width);
+  --color-switch: white;
+  --color-slider-off: #ccc;
+  --color-slider-on: #2196f3;
+
+  /* don't change these */
+  --switch-height: calc(var(--slider-height) - 2 * var(--slider-padding));
+  --slider-width: calc(var(--switch-width) + var(--switch-translate) + 2 * var(--slider-padding));
+}
 
 /* The switch - the box around the slider */
 .switch {
   position: relative;
   display: inline-block;
-  width: 48px;
-  height: 28px;
+  width: var(--slider-width);
+  height: var(--slider-height);
 }
 
 /* Hide default HTML checkbox */
@@ -51,42 +65,42 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  background-color: var(--color-slider-off);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .slider:before {
   position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  content: '';
+  height: var(--switch-height);
+  width: var(--switch-width);
+  left: var(--slider-padding);
+  bottom: var(--slider-padding);
+  background-color: var(--color-switch);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: var(--color-slider-on);
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px var(--color-slider-on);
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(20px);
-  -ms-transform: translateX(20px);
-  transform: translateX(20px);
+  -webkit-transform: translateX(var(--switch-translate));
+  -ms-transform: translateX(var(--switch-translate));
+  transform: translateX(var(--switch-translate));
 }
 
 /* Rounded sliders */
 .slider.round {
-  border-radius: 28px;
+  border-radius: var(--slider-height);
 }
 
 .slider.round:before {
-  border-radius: 50%;
+  border-radius: var(--switch-height);
 }
