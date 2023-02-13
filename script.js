@@ -41,7 +41,7 @@ const gameBoard = (() => {
   const getGameActive = () => _gameActive;
   const getWinner = () => _winner;
   const getEmptyCells = () => {
-    return _board.map((val, i) => (val === '' ? i : false)).filter((val) => val);
+    return _board.map((val, i) => (val === '' ? i : -1)).filter((val) => val >= 0);
   };
 
   const initBoard = () => {
@@ -133,16 +133,21 @@ const gameController = (() => {
   const initNextMove = () => {
     if (gameBoard.getCurrentPlayer() === player1.symbol) {
       if (player1.getAiStatus()) {
-        console.log('Player 1: ' + player1.makeMove(gameBoard.getEmptyCells()));
+        let move = player1.makeMove(gameBoard.getEmptyCells());
+        console.log(`Player 1: ${move}, ${gameBoard.getEmptyCells()}`);
+        _pickCell(move);
       }
     } else {
       if (player2.getAiStatus()) {
-        console.log('Player 2: ' + player2.makeMove(gameBoard.getEmptyCells()));
+        let move = player2.makeMove(gameBoard.getEmptyCells());
+        console.log(`Player 2: ${move}, ${gameBoard.getEmptyCells()}`);
+        _pickCell(move);
       }
     }
   };
 
   const _startNewGame = () => {
+    console.log('-----------NEW GAME-------------');
     gameBoard.initBoard();
     _clearBoard();
     _gameResultNode.innerText = '';
