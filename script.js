@@ -89,6 +89,7 @@ const gameBoard = (() => {
 
 const gameController = (() => {
   const _boardNode = document.querySelector('.board');
+  const _cellNodes = document.querySelectorAll('.cell');
   const _gameResultNode = document.querySelector('.game-result');
   const _player1Name = document.querySelector('#player1-name');
   const _player1Score = document.querySelector('#player1-score');
@@ -99,56 +100,51 @@ const gameController = (() => {
   const _newGameBtn = document.querySelector('.new-game');
   const _newMatchBtn = document.querySelector('.new-match');
 
-  const renderBoard = () => {
-    _clearBoard();
-    gameBoard.getBoardArray().forEach((cellValue, i) => {
-      const cellNode = document.createElement('li');
-      cellNode.classList.add('cell');
-      cellNode.setAttribute('data-index', i);
-      cellNode.innerText = cellValue;
-      cellNode.addEventListener('click', _pickCell);
-      _boardNode.appendChild(cellNode);
-    });
+  const _clearBoard = () => {
+    _cellNodes.forEach((cellNode) => (cellNode.innerText = ''));
   };
 
-  const _clearBoard = () => {
-    while (_boardNode.firstChild) {
-      _boardNode.removeChild(_boardNode.firstChild);
+  const _getCellIndex = (event) => {
+    const index = event.currentTarget.getAttribute('data-index');
+    _pickCell(index);
+  };
+
+  const _pickCell = (index) => {
+    if (!gameBoard.getWinner()) {
+      player = gameBoard.pickCell(+index);
+      if (player) _cellNodes[index].innerText = player;
+      const result = gameBoard.getWinner();
+      result ? handleGameEnd(result) : initNextMove();
     }
   };
 
-  const _pickCell = (event) => {
-    if (!gameBoard.getWinner()) {
-      const index = event.currentTarget.getAttribute('data-index');
-      player = gameBoard.pickCell(+index);
-      if (player) event.currentTarget.innerText = player;
+  const handleGameEnd = (result) => {
+    if (result === 'Tie') {
+      _gameResultNode.innerText = 'Tie Game!';
+    } else if (result === player1.symbol) {
+      _player1Score.innerText = player1.incrementScore();
+      _gameResultNode.innerText = `${_player1Name.value} Wins!`;
+    } else if (result === player2.symbol) {
+      _player2Score.innerText = player2.incrementScore();
+      _gameResultNode.innerText = `${_player2Name.value} Wins!`;
+    }
+  };
 
-      const result = gameBoard.getWinner();
-      if (result === 'Tie') {
-        _gameResultNode.innerText = 'Tie Game!';
-      } else if (result === player1.symbol) {
-        _player1Score.innerText = player1.incrementScore();
-        _gameResultNode.innerText = `${_player1Name.value} Wins!`;
-      } else if (result === player2.symbol) {
-        _player2Score.innerText = player2.incrementScore();
-        _gameResultNode.innerText = `${_player2Name.value} Wins!`;
-      } else {
-        if (gameBoard.getCurrentPlayer() === player1.symbol) {
-          if (player1.getAiStatus()) {
-            console.log('Player 1: ' + player1.makeMove(gameBoard.getEmptySpaces()));
-          }
-        } else {
-          if (player2.getAiStatus()) {
-            console.log('Player 2: ' + player2.makeMove(gameBoard.getEmptySpaces()));
-          }
-        }
+  const initNextMove = () => {
+    if (gameBoard.getCurrentPlayer() === player1.symbol) {
+      if (player1.getAiStatus()) {
+        console.log('Player 1: ' + player1.makeMove(gameBoard.getEmptySpaces()));
+      }
+    } else {
+      if (player2.getAiStatus()) {
+        console.log('Player 2: ' + player2.makeMove(gameBoard.getEmptySpaces()));
       }
     }
   };
 
   const _startNewGame = () => {
     gameBoard.initBoard();
-    renderBoard();
+    _clearBoard();
     _gameResultNode.innerText = '';
   };
 
@@ -162,8 +158,9 @@ const gameController = (() => {
   _newMatchBtn.addEventListener('click', _startNewMatch);
   _player1AIToggle.addEventListener('change', player1.toggleAI);
   _player2AIToggle.addEventListener('change', player2.toggleAI);
+  _cellNodes.forEach((cellNode) => {
+    cellNode.addEventListener('click', _getCellIndex);
+  });
 
-  return { renderBoard };
+  return {};
 })();
-
-gameController.renderBoard();
