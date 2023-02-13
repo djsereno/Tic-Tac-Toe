@@ -1,8 +1,11 @@
 const Player = (playerSymbol) => {
   const symbol = playerSymbol;
   let _score = 0;
+  let _isAi = false;
 
   const getScore = () => _score;
+  const getAiStatus = () => _isAi;
+
   const initScore = () => {
     _score = 0;
     return _score;
@@ -13,7 +16,15 @@ const Player = (playerSymbol) => {
     return _score;
   };
 
-  return { symbol, getScore, incrementScore, initScore };
+  const makeMove = (options) => {
+    return options[Math.floor(Math.random() * options.length)];
+  };
+
+  const toggleAI = () => {
+    _isAi = !_isAi;
+  };
+
+  return { symbol, getAiStatus, getScore, makeMove, incrementScore, initScore, toggleAI };
 };
 
 player1 = Player('X');
@@ -81,8 +92,10 @@ const gameController = (() => {
   const _gameResultNode = document.querySelector('.game-result');
   const _player1Name = document.querySelector('#player1-name');
   const _player1Score = document.querySelector('#player1-score');
+  const _player1AIToggle = document.querySelector('#player1-ai');
   const _player2Name = document.querySelector('#player2-name');
   const _player2Score = document.querySelector('#player2-score');
+  const _player2AIToggle = document.querySelector('#player2-ai');
   const _newGameBtn = document.querySelector('.new-game');
   const _newMatchBtn = document.querySelector('.new-match');
 
@@ -119,6 +132,16 @@ const gameController = (() => {
       } else if (result === player2.symbol) {
         _player2Score.innerText = player2.incrementScore();
         _gameResultNode.innerText = `${_player2Name.value} Wins!`;
+      } else {
+        if (gameBoard.getCurrentPlayer() === player1.symbol) {
+          if (player1.getAiStatus()) {
+            console.log('Player 1: ' + player1.makeMove(gameBoard.getEmptySpaces()));
+          }
+        } else {
+          if (player2.getAiStatus()) {
+            console.log('Player 2: ' + player2.makeMove(gameBoard.getEmptySpaces()));
+          }
+        }
       }
     }
   };
@@ -137,6 +160,8 @@ const gameController = (() => {
 
   _newGameBtn.addEventListener('click', _startNewGame);
   _newMatchBtn.addEventListener('click', _startNewMatch);
+  _player1AIToggle.addEventListener('change', player1.toggleAI);
+  _player2AIToggle.addEventListener('change', player2.toggleAI);
 
   return { renderBoard };
 })();
