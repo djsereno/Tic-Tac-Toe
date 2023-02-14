@@ -38,7 +38,6 @@ const gameBoard = (() => {
   const display = () => console.table(_board);
   const getBoardArray = () => [..._board];
   const getCurrentPlayer = () => _currentPlayer;
-  const getGameActive = () => _gameActive;
   const getWinner = () => _winner;
   const getEmptyCells = () => {
     return _board.map((val, i) => (val === '' ? i : -1)).filter((val) => val >= 0);
@@ -46,30 +45,29 @@ const gameBoard = (() => {
 
   const initBoard = () => {
     _board.fill('');
-    _player1 = player1.symbol;
-    _player2 = player2.symbol;
-    _currentPlayer = _player1;
+    _currentPlayer = player1;
     _winner = false;
   };
 
   const pickCell = (index) => {
     if (_board[index] !== '') return false;
-    _board[index] = _currentPlayer;
+    _board[index] = _currentPlayer.symbol;
     _winner = _checkWinner();
-    _currentPlayer === _player1 ? (_currentPlayer = _player2) : (_currentPlayer = _player1);
-    return _board[index];
+    console.log(_currentPlayer.symbol, index, getEmptyCells());
+    _currentPlayer === player1 ? (_currentPlayer = player2) : (_currentPlayer = player1);
+    return true;
   };
 
   const _checkWinner = () => {
+    if (_board[0] !== '' && _board[0] == _board[1] && _board[0] == _board[2]) return _currentPlayer;
+    if (_board[3] !== '' && _board[3] == _board[4] && _board[3] == _board[5]) return _currentPlayer;
+    if (_board[6] !== '' && _board[6] == _board[7] && _board[6] == _board[8]) return _currentPlayer;
+    if (_board[0] !== '' && _board[0] == _board[3] && _board[0] == _board[6]) return _currentPlayer;
+    if (_board[1] !== '' && _board[1] == _board[4] && _board[1] == _board[7]) return _currentPlayer;
+    if (_board[2] !== '' && _board[2] == _board[5] && _board[2] == _board[8]) return _currentPlayer;
+    if (_board[0] !== '' && _board[0] == _board[4] && _board[0] == _board[8]) return _currentPlayer;
+    if (_board[2] !== '' && _board[2] == _board[4] && _board[2] == _board[6]) return _currentPlayer;
     if (_board.findIndex((val) => val === '') === -1) return 'Tie';
-    if (_board[0] !== '' && _board[0] == _board[1] && _board[0] == _board[2]) return _board[0];
-    if (_board[3] !== '' && _board[3] == _board[4] && _board[3] == _board[5]) return _board[3];
-    if (_board[6] !== '' && _board[6] == _board[7] && _board[6] == _board[8]) return _board[6];
-    if (_board[0] !== '' && _board[0] == _board[3] && _board[0] == _board[6]) return _board[0];
-    if (_board[1] !== '' && _board[1] == _board[4] && _board[1] == _board[7]) return _board[1];
-    if (_board[2] !== '' && _board[2] == _board[5] && _board[2] == _board[8]) return _board[2];
-    if (_board[0] !== '' && _board[0] == _board[4] && _board[0] == _board[8]) return _board[0];
-    if (_board[2] !== '' && _board[2] == _board[4] && _board[2] == _board[6]) return _board[2];
     return false;
   };
 
@@ -80,7 +78,6 @@ const gameBoard = (() => {
     getEmptyCells,
     getCurrentPlayer,
     getWinner,
-    getGameActive,
     initBoard,
     pickCell,
     display,
@@ -104,50 +101,43 @@ const gameController = (() => {
     _cellNodes.forEach((cellNode) => (cellNode.innerText = ''));
   };
 
-  const _getCellIndex = (event) => {
+  const _clickCell = (event) => {
     const index = event.currentTarget.getAttribute('data-index');
     _pickCell(index);
   };
 
   const _pickCell = (index) => {
     if (!gameBoard.getWinner()) {
-      player = gameBoard.pickCell(+index);
-      if (player) _cellNodes[index].innerText = player;
+      const currentPlayer = gameBoard.getCurrentPlayer();
+      const validChoice = gameBoard.pickCell(+index);
+      if (validChoice) _cellNodes[index].innerText = currentPlayer.symbol;
       const result = gameBoard.getWinner();
-      result ? handleGameEnd(result) : _initiateNextMove();
+      result ? _handleGameEnd(result) : _initiateNextMove();
     }
   };
 
-  const handleGameEnd = (result) => {
+  const _handleGameEnd = (result) => {
     if (result === 'Tie') {
       _gameResultNode.innerText = 'Tie Game!';
-    } else if (result === player1.symbol) {
+    } else if (result === player1) {
       _player1Score.innerText = player1.incrementScore();
       _gameResultNode.innerText = `${_player1Name.value} Wins!`;
-    } else if (result === player2.symbol) {
+    } else if (result === player2) {
       _player2Score.innerText = player2.incrementScore();
       _gameResultNode.innerText = `${_player2Name.value} Wins!`;
     }
   };
 
   const _initiateNextMove = () => {
-    if (gameBoard.getCurrentPlayer() === player1.symbol) {
-      if (player1.getAiStatus()) {
-        let move = player1.makeMove(gameBoard.getEmptyCells());
-        console.log(`Player 1: ${move}, ${gameBoard.getEmptyCells()}`);
-        _pickCell(move);
-      }
-    } else {
-      if (player2.getAiStatus()) {
-        let move = player2.makeMove(gameBoard.getEmptyCells());
-        console.log(`Player 2: ${move}, ${gameBoard.getEmptyCells()}`);
-        _pickCell(move);
-      }
+    const currentPlayer = gameBoard.getCurrentPlayer();
+    if (currentPlayer.getAiStatus()) {
+      let move = currentPlayer.makeMove(gameBoard.getEmptyCells());
+      _pickCell(move);
     }
   };
 
   const _startNewGame = () => {
-    console.log('-----------NEW GAME-------------');
+    console.log('-----NEW GAME-----');
     gameBoard.initBoard();
     _clearBoard();
     _gameResultNode.innerText = '';
@@ -170,7 +160,7 @@ const gameController = (() => {
   _player1AIToggle.addEventListener('change', () => _toggleAi(player1));
   _player2AIToggle.addEventListener('change', () => _toggleAi(player2));
   _cellNodes.forEach((cellNode) => {
-    cellNode.addEventListener('click', _getCellIndex);
+    cellNode.addEventListener('click', _clickCell);
   });
 
   return {};
