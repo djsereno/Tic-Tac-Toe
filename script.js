@@ -114,7 +114,7 @@ const gameController = (() => {
       player = gameBoard.pickCell(+index);
       if (player) _cellNodes[index].innerText = player;
       const result = gameBoard.getWinner();
-      result ? handleGameEnd(result) : initNextMove();
+      result ? handleGameEnd(result) : _initiateNextMove();
     }
   };
 
@@ -130,7 +130,7 @@ const gameController = (() => {
     }
   };
 
-  const initNextMove = () => {
+  const _initiateNextMove = () => {
     if (gameBoard.getCurrentPlayer() === player1.symbol) {
       if (player1.getAiStatus()) {
         let move = player1.makeMove(gameBoard.getEmptyCells());
@@ -151,18 +151,24 @@ const gameController = (() => {
     gameBoard.initBoard();
     _clearBoard();
     _gameResultNode.innerText = '';
+    _initiateNextMove();
   };
 
   const _startNewMatch = () => {
-    _startNewGame();
     _player1Score.innerText = player1.initScore();
     _player2Score.innerText = player2.initScore();
+    _startNewGame();
+  };
+
+  const _toggleAi = (player) => {
+    player.toggleAI();
+    _initiateNextMove();
   };
 
   _newGameBtn.addEventListener('click', _startNewGame);
   _newMatchBtn.addEventListener('click', _startNewMatch);
-  _player1AIToggle.addEventListener('change', player1.toggleAI);
-  _player2AIToggle.addEventListener('change', player2.toggleAI);
+  _player1AIToggle.addEventListener('change', () => _toggleAi(player1));
+  _player2AIToggle.addEventListener('change', () => _toggleAi(player2));
   _cellNodes.forEach((cellNode) => {
     cellNode.addEventListener('click', _getCellIndex);
   });
