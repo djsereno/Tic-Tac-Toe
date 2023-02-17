@@ -85,17 +85,16 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
-  const _boardNode = document.querySelector('.board');
   const _cellNodes = document.querySelectorAll('.cell');
   const _gameResultNode = document.querySelector('.game-result');
+  const _newGameBtn = document.querySelector('.new-game');
+  const _newMatchBtn = document.querySelector('.new-match');
   const _player1Name = document.querySelector('#player1-name');
   const _player1Score = document.querySelector('#player1-score');
   const _player1AIToggle = document.querySelector('#player1-ai');
   const _player2Name = document.querySelector('#player2-name');
   const _player2Score = document.querySelector('#player2-score');
   const _player2AIToggle = document.querySelector('#player2-ai');
-  const _newGameBtn = document.querySelector('.new-game');
-  const _newMatchBtn = document.querySelector('.new-match');
 
   const _clearBoard = () => {
     _cellNodes.forEach((cellNode) => (cellNode.innerText = ''));
@@ -121,10 +120,10 @@ const gameController = (() => {
       _gameResultNode.innerText = 'Tie Game!';
     } else if (result === player1) {
       _player1Score.innerText = player1.incrementScore();
-      _gameResultNode.innerText = `${_player1Name.value} Wins!`;
+      _gameResultNode.innerText = `${_player1Name.innerText} Wins!`;
     } else if (result === player2) {
       _player2Score.innerText = player2.incrementScore();
-      _gameResultNode.innerText = `${_player2Name.value} Wins!`;
+      _gameResultNode.innerText = `${_player2Name.innerText} Wins!`;
     }
   };
 

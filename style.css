@@ -1,10 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Varela Round', sans-serif;
+  color: var(--color-secondary);
 }
 
 :root {
+  --color-background: #EFEFD0;
+  /* --color-background: #d09717; */
+  --color-secondary: #004E89;
+}
+
+body {
+  background-color: var(--color-background);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin: 50px;
+  font-size: 4rem;
+}
+
+.player-container {
+  display: flex;
+  gap: 20px;
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.name-group {
+  display: flex;
+  gap: 1ch;
+}
+
+.player-name,
+.player-symbol {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.player-name {
+  border: none;
+  background-color: transparent;
+  text-align: right;
+}
+
+.player-name:hover {
+  text-decoration: overline;
 }
 
 .board {
@@ -13,8 +67,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 4px;
-  background-color: #333;
+  gap: 10px;
+  background-color: var(--color-secondary);
   list-style: none;
 }
 
@@ -24,6 +78,8 @@
   border: none;
   background-color: #eee;
   user-select: none;
+  font-size: 100px;
+  line-height: 0;
 }
 
 /* SLIDER */
