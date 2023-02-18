@@ -97,7 +97,10 @@ const gameController = (() => {
   const _player2AIToggle = document.querySelector('#player2-ai');
 
   const _clearBoard = () => {
-    _cellNodes.forEach((cellNode) => (cellNode.innerText = ''));
+    _cellNodes.forEach((cellNode) => {
+      cellNode.innerText = '';
+      cellNode.classList.value = 'cell';
+    });
   };
 
   const _clickCell = (event) => {
@@ -109,7 +112,10 @@ const gameController = (() => {
     if (!gameBoard.getWinner()) {
       const currentPlayer = gameBoard.getCurrentPlayer();
       const validChoice = gameBoard.pickCell(+index);
-      if (validChoice) _cellNodes[index].innerText = currentPlayer.symbol;
+      if (validChoice) {
+        _cellNodes[index].innerText = currentPlayer.symbol;
+        _cellNodes[index].classList.add('picked-' + currentPlayer.symbol);
+      }
       const result = gameBoard.getWinner();
       result ? _handleGameEnd(result) : _initiateNextMove();
     }
