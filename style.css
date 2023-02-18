@@ -150,15 +150,44 @@ h1 {
 }
 
 .player-symbol.player1,
-.cell.picked-X {
+.cell.picked.X {
+  position: relative;
   background-color: var(--color-cell-X);
-  color: var(--color-font-X);
+  /* color: var(--color-font-X); */
+  color: var(--color-cell-X);
+
 }
 
 .player-symbol.player2,
-.cell.picked-O {
+.cell.picked.O {
+  position: relative;
   background-color: var(--color-cell-O);
-  color: var(--color-font-O);
+  /* color: var(--color-font-O); */
+  color: var(--color-cell-O);
+
+}
+
+.player-symbol::before,
+.cell.picked::before {
+  content: '';
+  margin: 15%;
+  background-size: cover;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.4;
+}
+
+.player-symbol.player1::before,
+.cell.picked.X::before {
+  background-image: url('./images/X.png');
+}
+
+.player-symbol.player2::before,
+.cell.picked.O::before {
+  background-image: url('./images/O.png');
 }
 
 /* SLIDER */

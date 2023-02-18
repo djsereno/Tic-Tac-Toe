@@ -114,7 +114,8 @@ const gameController = (() => {
       const validChoice = gameBoard.pickCell(+index);
       if (validChoice) {
         _cellNodes[index].innerText = currentPlayer.symbol;
-        _cellNodes[index].classList.add('picked-' + currentPlayer.symbol);
+        _cellNodes[index].classList.add('picked');
+        _cellNodes[index].classList.add(currentPlayer.symbol);
       }
       const result = gameBoard.getWinner();
       result ? _handleGameEnd(result) : _initiateNextMove();
