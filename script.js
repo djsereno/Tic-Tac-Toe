@@ -120,10 +120,10 @@ const gameController = (() => {
       _gameResultNode.innerText = 'Tie Game!';
     } else if (result === player1) {
       _player1Score.innerText = player1.incrementScore();
-      _gameResultNode.innerText = `${_player1Name.innerText} Wins!`;
+      _gameResultNode.innerText = `${_player1Name.value} Wins!`;
     } else if (result === player2) {
       _player2Score.innerText = player2.incrementScore();
-      _gameResultNode.innerText = `${_player2Name.innerText} Wins!`;
+      _gameResultNode.innerText = `${_player2Name.value} Wins!`;
     }
   };
 
