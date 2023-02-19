@@ -1,5 +1,7 @@
 const Player = (playerSymbol) => {
   const symbol = playerSymbol;
+  const domNodes = {};
+  let name;
   let _score = 0;
   let _isAi = false;
 
@@ -24,7 +26,7 @@ const Player = (playerSymbol) => {
     _isAi = !_isAi;
   };
 
-  return { symbol, getAiStatus, getScore, makeMove, incrementScore, initScore, toggleAI };
+  return { symbol, domNodes, getAiStatus, getScore, makeMove, incrementScore, initScore, toggleAI };
 };
 
 playerX = Player('X');
@@ -95,14 +97,13 @@ const gameController = (() => {
   const _gameResultNode = document.querySelector('.game-result');
   const _newGameBtn = document.querySelector('.new-game');
   const _newMatchBtn = document.querySelector('.new-match');
-  const _playerXInfo = document.querySelector('#playerX-info');
-  const _playerXName = document.querySelector('#playerX-name');
-  const _playerXScore = document.querySelector('#playerX-score');
-  const _playerXAIToggle = document.querySelector('#playerX-ai');
-  const _playerOInfo = document.querySelector('#playerO-info');
-  const _playerOName = document.querySelector('#playerO-name');
-  const _playerOScore = document.querySelector('#playerO-score');
-  const _playerOAIToggle = document.querySelector('#playerO-ai');
+
+  const _setDomNodes = (player) => {
+    const domNodeNames = ['info', 'name', 'score', 'ai'];
+    domNodeNames.forEach(
+      (name) => (player.domNodes[name] = document.querySelector(`#player${player.symbol}-${name}`))
+    );
+  };
 
   const _clearBoard = () => {
     _cellNodes.forEach((cellNode) => {
@@ -135,15 +136,15 @@ const gameController = (() => {
 
     if (result === 'Tie') {
       _gameResultNode.innerText = 'Tie Game!';
-      _playerXInfo.classList.remove('current');
-      _playerOInfo.classList.remove('current');
+      playerX.domNodes.info.classList.remove('current');
+      playerO.domNodes.info.classList.remove('current');
       return;
     } else if (result === playerX) {
-      _playerXScore.innerText = playerX.incrementScore();
-      _gameResultNode.innerText = `${_playerXName.value} Wins!`;
+      playerX.domNodes.score.innerText = playerX.incrementScore();
+      _gameResultNode.innerText = `${playerX.domNodes.name.value} Wins!`;
     } else if (result === playerO) {
-      _playerOScore.innerText = playerO.incrementScore();
-      _gameResultNode.innerText = `${_playerOName.value} Wins!`;
+      playerO.domNodes.score.innerText = playerO.incrementScore();
+      _gameResultNode.innerText = `${playerO.domNodes.name.value} Wins!`;
     }
 
     const winningCells = gameBoard.getWinningCells();
@@ -159,13 +160,13 @@ const gameController = (() => {
 
     const currentPlayer = gameBoard.getCurrentPlayer();
     if (currentPlayer === playerX) {
-      _playerXInfo.classList.add('current');
-      _playerOInfo.classList.remove('current');
-      _gameResultNode.innerText = `${_playerXName.value}'s Turn`;
+      playerX.domNodes.info.classList.add('current');
+      playerO.domNodes.info.classList.remove('current');
+      _gameResultNode.innerText = `${playerX.domNodes.name.value}'s Turn`;
     } else {
-      _playerXInfo.classList.remove('current');
-      _playerOInfo.classList.add('current');
-      _gameResultNode.innerText = `${_playerOName.value}'s Turn`;
+      playerX.domNodes.info.classList.remove('current');
+      playerO.domNodes.info.classList.add('current');
+      _gameResultNode.innerText = `${playerO.domNodes.name.value}'s Turn`;
     }
 
     if (currentPlayer.getAiStatus()) {
@@ -177,16 +178,16 @@ const gameController = (() => {
   const _startNewGame = () => {
     gameBoard.initBoard();
     _clearBoard();
-    _gameResultNode.innerText = `${_playerXName.value}'s Turn`;
+    _gameResultNode.innerText = `${playerX.domNodes.name.value}'s Turn`;
     _boardNode.classList.remove('game-over');
-    _playerXInfo.classList.add('current');
-    _playerOInfo.classList.remove('current');
+    playerX.domNodes.info.classList.add('current');
+    playerO.domNodes.info.classList.remove('current');
     if (gameBoard.getCurrentPlayer().getAiStatus()) _initiateNextMove();
   };
 
   const _startNewMatch = () => {
-    _playerXScore.innerText = playerX.initScore();
-    _playerOScore.innerText = playerO.initScore();
+    playerX.domNodes.score.innerText = playerX.initScore();
+    playerO.domNodes.score.innerText = playerO.initScore();
     _startNewGame();
   };
 
@@ -195,10 +196,13 @@ const gameController = (() => {
     _initiateNextMove();
   };
 
+  _setDomNodes(playerX);
+  _setDomNodes(playerO);
+
   _newGameBtn.addEventListener('click', _startNewGame);
   _newMatchBtn.addEventListener('click', _startNewMatch);
-  _playerXAIToggle.addEventListener('change', () => _toggleAi(playerX));
-  _playerOAIToggle.addEventListener('change', () => _toggleAi(playerO));
+  playerX.domNodes.ai.addEventListener('change', () => _toggleAi(playerX));
+  playerO.domNodes.ai.addEventListener('change', () => _toggleAi(playerO));
   _cellNodes.forEach((cellNode) => {
     cellNode.addEventListener('click', _clickCell);
   });
