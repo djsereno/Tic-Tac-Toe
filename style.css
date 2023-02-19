@@ -53,15 +53,15 @@ h1 {
   transition: all 0.3s;
 }
 
-.player-info:hover {
+.player-info.current {
   transform: scale(1.02);
 }
 
-#player1-info:hover {
+#player1-info.current {
   background-color: var(--color-cell-X);
 }
 
-#player2-info:hover {
+#player2-info.current {
   background-color: var(--color-cell-O);
 }
 
@@ -145,8 +145,12 @@ h1 {
   line-height: 0;
 }
 
-.cell:not(.cell.picked-X, .cell.picked-O):hover {
+.board:not(.game-over) .cell:not(.picked):hover {
   filter: brightness(0.9);
+}
+
+.board.game-over .cell:not(.winner) {
+  filter: brightness(0.5);
 }
 
 .player-symbol.player1,
@@ -155,7 +159,6 @@ h1 {
   background-color: var(--color-cell-X);
   /* color: var(--color-font-X); */
   color: var(--color-cell-X);
-
 }
 
 .player-symbol.player2,
@@ -164,7 +167,6 @@ h1 {
   background-color: var(--color-cell-O);
   /* color: var(--color-font-O); */
   color: var(--color-cell-O);
-
 }
 
 .player-symbol::before,
@@ -177,7 +179,7 @@ h1 {
   right: 0px;
   bottom: 0px;
   left: 0px;
-  opacity: 0.4;
+  opacity: 0.5;
 }
 
 .player-symbol.player1::before,
@@ -188,6 +190,36 @@ h1 {
 .player-symbol.player2::before,
 .cell.picked.O::before {
   background-image: url('./images/O.png');
+}
+
+.cell.winner {
+  border: 6px solid green;
+  animation: 1.5s ease-in 0s pulse infinite;
+}
+
+.cell.winner.first {
+  animation-delay: 0;
+}
+.cell.winner.second {
+  animation-delay: 0.15s;
+}
+.cell.winner.third {
+  animation-delay: 0.3s;
+}
+
+.game-result {
+  margin: 25px;
+  font-size: 3rem;
+}
+
+@keyframes pulse {
+  0%,
+  50% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.08);
+  }
 }
 
 /* SLIDER */

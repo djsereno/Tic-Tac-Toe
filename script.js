@@ -89,9 +89,11 @@ const gameController = (() => {
   const _gameResultNode = document.querySelector('.game-result');
   const _newGameBtn = document.querySelector('.new-game');
   const _newMatchBtn = document.querySelector('.new-match');
+  const _player1Info = document.querySelector('#player1-info');
   const _player1Name = document.querySelector('#player1-name');
   const _player1Score = document.querySelector('#player1-score');
   const _player1AIToggle = document.querySelector('#player1-ai');
+  const _player2Info = document.querySelector('#player2-info');
   const _player2Name = document.querySelector('#player2-name');
   const _player2Score = document.querySelector('#player2-score');
   const _player2AIToggle = document.querySelector('#player2-ai');
@@ -136,6 +138,8 @@ const gameController = (() => {
 
   const _initiateNextMove = () => {
     const currentPlayer = gameBoard.getCurrentPlayer();
+    _player1Info.classList.toggle('current');
+    _player2Info.classList.toggle('current');
     if (currentPlayer.getAiStatus()) {
       let move = currentPlayer.makeMove(gameBoard.getEmptyCells());
       _pickCell(move);
@@ -147,7 +151,9 @@ const gameController = (() => {
     gameBoard.initBoard();
     _clearBoard();
     _gameResultNode.innerText = '';
-    _initiateNextMove();
+    _player1Info.classList.add('current');
+    _player2Info.classList.remove('current');
+    if (gameBoard.getCurrentPlayer().getAiStatus()) _initiateNextMove();
   };
 
   const _startNewMatch = () => {
