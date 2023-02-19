@@ -85,6 +85,7 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
+  const _boardNode = document.querySelector('.board');
   const _cellNodes = document.querySelectorAll('.cell');
   const _gameResultNode = document.querySelector('.game-result');
   const _newGameBtn = document.querySelector('.new-game');
@@ -125,6 +126,7 @@ const gameController = (() => {
   };
 
   const _handleGameEnd = (result) => {
+    _boardNode.classList.add('game-over');
     if (result === 'Tie') {
       _gameResultNode.innerText = 'Tie Game!';
     } else if (result === player1) {
@@ -151,6 +153,7 @@ const gameController = (() => {
     gameBoard.initBoard();
     _clearBoard();
     _gameResultNode.innerText = '';
+    _boardNode.classList.remove('game-over');
     _player1Info.classList.add('current');
     _player2Info.classList.remove('current');
     if (gameBoard.getCurrentPlayer().getAiStatus()) _initiateNextMove();
