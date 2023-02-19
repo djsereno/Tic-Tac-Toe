@@ -107,7 +107,6 @@ const gameController = (() => {
 
   const _clearBoard = () => {
     _cellNodes.forEach((cellNode) => {
-      cellNode.innerText = '';
       cellNode.classList.value = 'cell';
     });
   };
@@ -122,9 +121,7 @@ const gameController = (() => {
       const currentPlayer = gameBoard.getCurrentPlayer();
       const validChoice = gameBoard.pickCell(+index);
       if (validChoice) {
-        _cellNodes[index].innerText = currentPlayer.symbol;
-        _cellNodes[index].classList.add('picked');
-        _cellNodes[index].classList.add(currentPlayer.symbol);
+        _cellNodes[index].classList.add('picked', `player${currentPlayer.symbol}`, 'bg-image');
       }
       const result = gameBoard.getWinner();
       result ? _handleGameEnd(result) : _initiateNextMove();
@@ -149,10 +146,8 @@ const gameController = (() => {
 
     const winningCells = gameBoard.getWinningCells();
     _cellNodes[winningCells[0]].classList.add('winner');
-    _cellNodes[winningCells[1]].classList.add('winner');
-    _cellNodes[winningCells[2]].classList.add('winner');
-    _cellNodes[winningCells[1]].classList.add('win2');
-    _cellNodes[winningCells[2]].classList.add('win3');
+    _cellNodes[winningCells[1]].classList.add('winner', 'delay');
+    _cellNodes[winningCells[2]].classList.add('winner', 'delay2');
   };
 
   const _initiateNextMove = () => {
