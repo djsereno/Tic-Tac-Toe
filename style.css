@@ -58,11 +58,11 @@ h1 {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-#player1-info.current {
+#playerX-info.current {
   background-color: var(--color-cell-X);
 }
 
-#player2-info.current {
+#playerO-info.current {
   background-color: var(--color-cell-O);
 }
 
@@ -114,13 +114,13 @@ button {
   line-height: 0;
 }
 
-.player-symbol.player1 {
+.player-symbol.playerX {
   border: 3px solid var(--color-font-X);
   background-color: var(--color-cell-X);
   color: var(--color-font-X);
 }
 
-.player-symbol.player2 {
+.player-symbol.playerO {
   border: 3px solid var(--color-font-O);
   background-color: var(--color-cell-O);
   color: var(--color-font-O);
@@ -168,13 +168,13 @@ button {
   filter: brightness(0.5);
 }
 
-.player-symbol.player1,
+.player-symbol.playerX,
 .cell.picked.X {
   position: relative;
   background-color: var(--color-cell-X);
 }
 
-.player-symbol.player2,
+.player-symbol.playerO,
 .cell.picked.O {
   position: relative;
   background-color: var(--color-cell-O);
@@ -193,12 +193,12 @@ button {
   opacity: 0.5;
 }
 
-.player-symbol.player1::before,
+.player-symbol.playerX::before,
 .cell.picked.X::before {
   background-image: url('./images/X.png');
 }
 
-.player-symbol.player2::before,
+.player-symbol.playerO::before,
 .cell.picked.O::before {
   background-image: url('./images/O.png');
 }

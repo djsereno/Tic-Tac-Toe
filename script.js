@@ -27,8 +27,8 @@ const Player = (playerSymbol) => {
   return { symbol, getAiStatus, getScore, makeMove, incrementScore, initScore, toggleAI };
 };
 
-player1 = Player('X');
-player2 = Player('O');
+playerX = Player('X');
+playerO = Player('O');
 
 const gameBoard = (() => {
   const _board = Array(9);
@@ -47,7 +47,7 @@ const gameBoard = (() => {
 
   const initBoard = () => {
     _board.fill('');
-    _currentPlayer = player1;
+    _currentPlayer = playerX;
     _winner = false;
   };
 
@@ -58,7 +58,7 @@ const gameBoard = (() => {
     if (_winningCells) {
       _winningCells === -1 ? (_winner = 'Tie') : (_winner = _currentPlayer);
     }
-    _currentPlayer === player1 ? (_currentPlayer = player2) : (_currentPlayer = player1);
+    _currentPlayer === playerX ? (_currentPlayer = playerO) : (_currentPlayer = playerX);
     return true;
   };
 
@@ -95,14 +95,14 @@ const gameController = (() => {
   const _gameResultNode = document.querySelector('.game-result');
   const _newGameBtn = document.querySelector('.new-game');
   const _newMatchBtn = document.querySelector('.new-match');
-  const _player1Info = document.querySelector('#player1-info');
-  const _player1Name = document.querySelector('#player1-name');
-  const _player1Score = document.querySelector('#player1-score');
-  const _player1AIToggle = document.querySelector('#player1-ai');
-  const _player2Info = document.querySelector('#player2-info');
-  const _player2Name = document.querySelector('#player2-name');
-  const _player2Score = document.querySelector('#player2-score');
-  const _player2AIToggle = document.querySelector('#player2-ai');
+  const _playerXInfo = document.querySelector('#playerX-info');
+  const _playerXName = document.querySelector('#playerX-name');
+  const _playerXScore = document.querySelector('#playerX-score');
+  const _playerXAIToggle = document.querySelector('#playerX-ai');
+  const _playerOInfo = document.querySelector('#playerO-info');
+  const _playerOName = document.querySelector('#playerO-name');
+  const _playerOScore = document.querySelector('#playerO-score');
+  const _playerOAIToggle = document.querySelector('#playerO-ai');
 
   const _clearBoard = () => {
     _cellNodes.forEach((cellNode) => {
@@ -135,15 +135,15 @@ const gameController = (() => {
 
     if (result === 'Tie') {
       _gameResultNode.innerText = 'Tie Game!';
-      _player1Info.classList.remove('current');
-      _player2Info.classList.remove('current');
+      _playerXInfo.classList.remove('current');
+      _playerOInfo.classList.remove('current');
       return;
-    } else if (result === player1) {
-      _player1Score.innerText = player1.incrementScore();
-      _gameResultNode.innerText = `${_player1Name.value} Wins!`;
-    } else if (result === player2) {
-      _player2Score.innerText = player2.incrementScore();
-      _gameResultNode.innerText = `${_player2Name.value} Wins!`;
+    } else if (result === playerX) {
+      _playerXScore.innerText = playerX.incrementScore();
+      _gameResultNode.innerText = `${_playerXName.value} Wins!`;
+    } else if (result === playerO) {
+      _playerOScore.innerText = playerO.incrementScore();
+      _gameResultNode.innerText = `${_playerOName.value} Wins!`;
     }
 
     const winningCells = gameBoard.getWinningCells();
@@ -158,14 +158,14 @@ const gameController = (() => {
     if (gameBoard.getWinner()) return;
 
     const currentPlayer = gameBoard.getCurrentPlayer();
-    if (currentPlayer === player1) {
-      _player1Info.classList.add('current');
-      _player2Info.classList.remove('current');
-      _gameResultNode.innerText = `${_player1Name.value}'s Turn`;
+    if (currentPlayer === playerX) {
+      _playerXInfo.classList.add('current');
+      _playerOInfo.classList.remove('current');
+      _gameResultNode.innerText = `${_playerXName.value}'s Turn`;
     } else {
-      _player1Info.classList.remove('current');
-      _player2Info.classList.add('current');
-      _gameResultNode.innerText = `${_player2Name.value}'s Turn`;
+      _playerXInfo.classList.remove('current');
+      _playerOInfo.classList.add('current');
+      _gameResultNode.innerText = `${_playerOName.value}'s Turn`;
     }
 
     if (currentPlayer.getAiStatus()) {
@@ -177,16 +177,16 @@ const gameController = (() => {
   const _startNewGame = () => {
     gameBoard.initBoard();
     _clearBoard();
-    _gameResultNode.innerText = `${_player1Name.value}'s Turn`;
+    _gameResultNode.innerText = `${_playerXName.value}'s Turn`;
     _boardNode.classList.remove('game-over');
-    _player1Info.classList.add('current');
-    _player2Info.classList.remove('current');
+    _playerXInfo.classList.add('current');
+    _playerOInfo.classList.remove('current');
     if (gameBoard.getCurrentPlayer().getAiStatus()) _initiateNextMove();
   };
 
   const _startNewMatch = () => {
-    _player1Score.innerText = player1.initScore();
-    _player2Score.innerText = player2.initScore();
+    _playerXScore.innerText = playerX.initScore();
+    _playerOScore.innerText = playerO.initScore();
     _startNewGame();
   };
 
@@ -197,8 +197,8 @@ const gameController = (() => {
 
   _newGameBtn.addEventListener('click', _startNewGame);
   _newMatchBtn.addEventListener('click', _startNewMatch);
-  _player1AIToggle.addEventListener('change', () => _toggleAi(player1));
-  _player2AIToggle.addEventListener('change', () => _toggleAi(player2));
+  _playerXAIToggle.addEventListener('change', () => _toggleAi(playerX));
+  _playerOAIToggle.addEventListener('change', () => _toggleAi(playerO));
   _cellNodes.forEach((cellNode) => {
     cellNode.addEventListener('click', _clickCell);
   });
