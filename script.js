@@ -34,34 +34,37 @@ playerO = Player('O');
 
 const gameBoard = (() => {
   const _board = Array(9);
-  let _currentPlayer;
+  let _emptyCells;
   let _winner;
   let _winningCells;
 
   const display = () => console.table(_board);
   const getBoardArray = () => [..._board];
-  const getCurrentPlayer = () => _currentPlayer;
   const getWinner = () => _winner;
   const getWinningCells = () => _winningCells;
-  const getEmptyCells = () => {
-    return _board.map((val, i) => (val === '' ? i : -1)).filter((val) => val >= 0);
-  };
+  const getEmptyCells = () => [..._emptyCells];
 
   const initBoard = () => {
     _board.fill('');
-    _currentPlayer = playerX;
+    _emptyCells = Array(9).fill(0);
+    _emptyCells = _emptyCells.map((val, i) => i);
     _winner = false;
   };
 
-  const pickCell = (index) => {
-    if (_board[index] !== '') return false;
-    _board[index] = _currentPlayer.symbol;
+  const pickCell = (index, player) => {
+    if (!_emptyCells.includes(index)) return false;
+
+    _emptyCells.splice(_emptyCells.indexOf(index), 1);
+    _board[index] = player.symbol;
     _winningCells = _checkWinner();
     if (_winningCells) {
-      _winningCells === -1 ? (_winner = 'Tie') : (_winner = _currentPlayer);
+      _winningCells === -1 ? (_winner = 'Tie') : (_winner = player);
     }
-    _currentPlayer === playerX ? (_currentPlayer = playerO) : (_currentPlayer = playerX);
     return true;
+  };
+
+  const checkValidPick = (index) => {
+    return _emptyCells.includes(index) && !_winner;
   };
 
   const _checkWinner = () => {
@@ -82,8 +85,8 @@ const gameBoard = (() => {
   return {
     getBoardArray,
     getEmptyCells,
-    getCurrentPlayer,
     getWinner,
+    checkValidPick,
     getWinningCells,
     initBoard,
     pickCell,
@@ -92,114 +95,123 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
-  const _boardNode = document.querySelector('.board');
-  const _cellNodes = document.querySelectorAll('.cell');
-  const _gameResultNode = document.querySelector('.game-result');
-  const _newGameBtn = document.querySelector('.new-game');
-  const _newMatchBtn = document.querySelector('.new-match');
+  const boardNode = document.querySelector('.board');
+  const cellNodes = document.querySelectorAll('.cell');
+  const gameResultNode = document.querySelector('.game-result');
+  const newGameBtn = document.querySelector('.new-game');
+  const newMatchBtn = document.querySelector('.new-match');
+  let currentPlayer = playerX;
 
-  const _setDomNodes = (player) => {
+  const setDomNodes = (player) => {
     const domNodeNames = ['info', 'name', 'score', 'ai'];
     domNodeNames.forEach(
       (name) => (player.domNodes[name] = document.querySelector(`#player${player.symbol}-${name}`))
     );
+
+    player.domNodes.name.addEventListener('change', () => {
+      player.name = player.domNodes.name.value;
+    });
   };
 
-  const _clearBoard = () => {
-    _cellNodes.forEach((cellNode) => {
+  const clearBoard = () => {
+    cellNodes.forEach((cellNode) => {
       cellNode.classList.value = 'cell';
     });
   };
 
-  const _clickCell = (event) => {
+  const clickCell = (event) => {
     const index = event.currentTarget.getAttribute('data-index');
-    _pickCell(index);
+    pickCell(+index);
   };
 
-  const _pickCell = (index) => {
-    if (!gameBoard.getWinner()) {
-      const currentPlayer = gameBoard.getCurrentPlayer();
-      const validChoice = gameBoard.pickCell(+index);
-      if (validChoice) {
-        _cellNodes[index].classList.add('picked', `player${currentPlayer.symbol}`, 'bg-image');
-      }
-      const result = gameBoard.getWinner();
-      result ? _handleGameEnd(result) : _initiateNextMove();
-    }
+  const pickCell = (index) => {
+    if (!gameBoard.checkValidPick(index)) return;
+
+    gameBoard.pickCell(index, currentPlayer);
+    cellNodes[index].classList.add('picked', `player${currentPlayer.symbol}`, 'bg-image');
+
+    const result = gameBoard.getWinner();
+    result ? handleGameEnd(result) : initiateNextMove();
   };
 
-  const _handleGameEnd = (result) => {
-    _boardNode.classList.add('game-over');
+  const handleGameEnd = (result) => {
+    boardNode.classList.add('game-over');
 
     if (result === 'Tie') {
-      _gameResultNode.innerText = 'Tie Game!';
+      gameResultNode.innerText = 'Tie Game!';
       playerX.domNodes.info.classList.remove('current');
       playerO.domNodes.info.classList.remove('current');
       return;
     } else if (result === playerX) {
       playerX.domNodes.score.innerText = playerX.incrementScore();
-      _gameResultNode.innerText = `${playerX.domNodes.name.value} Wins!`;
+      gameResultNode.innerText = `${playerX.domNodes.name.value} Wins!`;
     } else if (result === playerO) {
       playerO.domNodes.score.innerText = playerO.incrementScore();
-      _gameResultNode.innerText = `${playerO.domNodes.name.value} Wins!`;
+      gameResultNode.innerText = `${playerO.domNodes.name.value} Wins!`;
     }
 
     const winningCells = gameBoard.getWinningCells();
-    _cellNodes[winningCells[0]].classList.add('winner');
-    _cellNodes[winningCells[1]].classList.add('winner', 'delay');
-    _cellNodes[winningCells[2]].classList.add('winner', 'delay2');
+    cellNodes[winningCells[0]].classList.add('winner');
+    cellNodes[winningCells[1]].classList.add('winner', 'delay');
+    cellNodes[winningCells[2]].classList.add('winner', 'delay2');
   };
 
-  const _initiateNextMove = () => {
+  const initiateNextMove = () => {
     if (gameBoard.getWinner()) return;
 
-    const currentPlayer = gameBoard.getCurrentPlayer();
     if (currentPlayer === playerX) {
-      playerX.domNodes.info.classList.add('current');
-      playerO.domNodes.info.classList.remove('current');
-      _gameResultNode.innerText = `${playerX.domNodes.name.value}'s Turn`;
-    } else {
+      currentPlayer = playerO;
       playerX.domNodes.info.classList.remove('current');
       playerO.domNodes.info.classList.add('current');
-      _gameResultNode.innerText = `${playerO.domNodes.name.value}'s Turn`;
+    } else {
+      currentPlayer = playerX;
+      playerO.domNodes.info.classList.remove('current');
+      playerX.domNodes.info.classList.add('current');
     }
+    gameResultNode.innerText = `${currentPlayer.domNodes.name.value}'s Turn`;
 
     if (currentPlayer.getAiStatus()) {
       let move = currentPlayer.makeMove(gameBoard.getEmptyCells());
-      _pickCell(move);
+      pickCell(move);
     }
   };
 
-  const _startNewGame = () => {
+  const startNewGame = () => {
     gameBoard.initBoard();
-    _clearBoard();
-    _gameResultNode.innerText = `${playerX.domNodes.name.value}'s Turn`;
-    _boardNode.classList.remove('game-over');
+    clearBoard();
+    gameResultNode.innerText = `${playerX.domNodes.name.value}'s Turn`;
+    boardNode.classList.remove('game-over');
+    currentPlayer = playerX;
     playerX.domNodes.info.classList.add('current');
     playerO.domNodes.info.classList.remove('current');
-    if (gameBoard.getCurrentPlayer().getAiStatus()) _initiateNextMove();
+    if (currentPlayer.getAiStatus()) {
+      let move = currentPlayer.makeMove(gameBoard.getEmptyCells());
+      pickCell(move);
+    }
   };
 
-  const _startNewMatch = () => {
+  const startNewMatch = () => {
     playerX.domNodes.score.innerText = playerX.initScore();
     playerO.domNodes.score.innerText = playerO.initScore();
-    _startNewGame();
+    startNewGame();
   };
 
-  const _toggleAi = (player) => {
+  const toggleAi = (player) => {
     player.toggleAI();
-    _initiateNextMove();
+    console.log(player === currentPlayer, !gameBoard.getWinner());
+    if (player === currentPlayer && !gameBoard.getWinner())
+      pickCell(player.makeMove(gameBoard.getEmptyCells()));
   };
 
-  _setDomNodes(playerX);
-  _setDomNodes(playerO);
+  setDomNodes(playerX);
+  setDomNodes(playerO);
 
-  _newGameBtn.addEventListener('click', _startNewGame);
-  _newMatchBtn.addEventListener('click', _startNewMatch);
-  playerX.domNodes.ai.addEventListener('change', () => _toggleAi(playerX));
-  playerO.domNodes.ai.addEventListener('change', () => _toggleAi(playerO));
-  _cellNodes.forEach((cellNode) => {
-    cellNode.addEventListener('click', _clickCell);
+  playerX.domNodes.ai.addEventListener('change', () => toggleAi(playerX));
+  playerO.domNodes.ai.addEventListener('change', () => toggleAi(playerO));
+  newGameBtn.addEventListener('click', startNewGame);
+  newMatchBtn.addEventListener('click', startNewMatch);
+  cellNodes.forEach((cellNode) => {
+    cellNode.addEventListener('click', clickCell);
   });
 
   return {};
