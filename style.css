@@ -157,7 +157,6 @@ h1 {
 .cell.picked.X {
   position: relative;
   background-color: var(--color-cell-X);
-  /* color: var(--color-font-X); */
   color: var(--color-cell-X);
 }
 
@@ -165,7 +164,6 @@ h1 {
 .cell.picked.O {
   position: relative;
   background-color: var(--color-cell-O);
-  /* color: var(--color-font-O); */
   color: var(--color-cell-O);
 }
 
@@ -193,17 +191,13 @@ h1 {
 }
 
 .cell.winner {
-  border: 6px solid green;
+  border: 4px outset var(--color-light);
   animation: 1.5s ease-in 0s pulse infinite;
 }
-
-.cell.winner.first {
-  animation-delay: 0;
-}
-.cell.winner.second {
+.cell.winner.win2 {
   animation-delay: 0.15s;
 }
-.cell.winner.third {
+.cell.winner.win3 {
   animation-delay: 0.3s;
 }
 
@@ -218,7 +212,7 @@ h1 {
     transform: scale(1);
   }
   25% {
-    transform: scale(1.08);
+    transform: scale(1.03);
   }
 }
 

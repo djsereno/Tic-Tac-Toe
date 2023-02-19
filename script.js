@@ -34,11 +34,13 @@ const gameBoard = (() => {
   const _board = Array(9);
   let _currentPlayer;
   let _winner;
+  let _winningCells;
 
   const display = () => console.table(_board);
   const getBoardArray = () => [..._board];
   const getCurrentPlayer = () => _currentPlayer;
   const getWinner = () => _winner;
+  const getWinningCells = () => _winningCells;
   const getEmptyCells = () => {
     return _board.map((val, i) => (val === '' ? i : -1)).filter((val) => val >= 0);
   };
@@ -52,22 +54,24 @@ const gameBoard = (() => {
   const pickCell = (index) => {
     if (_board[index] !== '') return false;
     _board[index] = _currentPlayer.symbol;
-    _winner = _checkWinner();
-    console.log(_currentPlayer.symbol, index, getEmptyCells());
+    _winningCells = _checkWinner();
+    if (_winningCells) {
+      _winningCells === -1 ? (_winner = 'Tie') : (_winner = _currentPlayer);
+    }
     _currentPlayer === player1 ? (_currentPlayer = player2) : (_currentPlayer = player1);
     return true;
   };
 
   const _checkWinner = () => {
-    if (_board[0] !== '' && _board[0] == _board[1] && _board[0] == _board[2]) return _currentPlayer;
-    if (_board[3] !== '' && _board[3] == _board[4] && _board[3] == _board[5]) return _currentPlayer;
-    if (_board[6] !== '' && _board[6] == _board[7] && _board[6] == _board[8]) return _currentPlayer;
-    if (_board[0] !== '' && _board[0] == _board[3] && _board[0] == _board[6]) return _currentPlayer;
-    if (_board[1] !== '' && _board[1] == _board[4] && _board[1] == _board[7]) return _currentPlayer;
-    if (_board[2] !== '' && _board[2] == _board[5] && _board[2] == _board[8]) return _currentPlayer;
-    if (_board[0] !== '' && _board[0] == _board[4] && _board[0] == _board[8]) return _currentPlayer;
-    if (_board[2] !== '' && _board[2] == _board[4] && _board[2] == _board[6]) return _currentPlayer;
-    if (_board.findIndex((val) => val === '') === -1) return 'Tie';
+    if (_board[0] !== '' && _board[0] == _board[1] && _board[0] == _board[2]) return [0, 1, 2];
+    if (_board[3] !== '' && _board[3] == _board[4] && _board[3] == _board[5]) return [3, 4, 5];
+    if (_board[6] !== '' && _board[6] == _board[7] && _board[6] == _board[8]) return [6, 7, 8];
+    if (_board[0] !== '' && _board[0] == _board[3] && _board[0] == _board[6]) return [0, 3, 6];
+    if (_board[1] !== '' && _board[1] == _board[4] && _board[1] == _board[7]) return [1, 4, 7];
+    if (_board[2] !== '' && _board[2] == _board[5] && _board[2] == _board[8]) return [2, 5, 8];
+    if (_board[0] !== '' && _board[0] == _board[4] && _board[0] == _board[8]) return [0, 4, 8];
+    if (_board[2] !== '' && _board[2] == _board[4] && _board[2] == _board[6]) return [2, 4, 6];
+    if (_board.findIndex((val) => val === '') === -1) return -1;
     return false;
   };
 
@@ -78,6 +82,7 @@ const gameBoard = (() => {
     getEmptyCells,
     getCurrentPlayer,
     getWinner,
+    getWinningCells,
     initBoard,
     pickCell,
     display,
@@ -127,8 +132,10 @@ const gameController = (() => {
 
   const _handleGameEnd = (result) => {
     _boardNode.classList.add('game-over');
+
     if (result === 'Tie') {
       _gameResultNode.innerText = 'Tie Game!';
+      return;
     } else if (result === player1) {
       _player1Score.innerText = player1.incrementScore();
       _gameResultNode.innerText = `${_player1Name.value} Wins!`;
@@ -136,6 +143,13 @@ const gameController = (() => {
       _player2Score.innerText = player2.incrementScore();
       _gameResultNode.innerText = `${_player2Name.value} Wins!`;
     }
+
+    const winningCells = gameBoard.getWinningCells();
+    _cellNodes[winningCells[0]].classList.add('winner');
+    _cellNodes[winningCells[1]].classList.add('winner');
+    _cellNodes[winningCells[2]].classList.add('winner');
+    _cellNodes[winningCells[1]].classList.add('win2');
+    _cellNodes[winningCells[2]].classList.add('win3');
   };
 
   const _initiateNextMove = () => {
