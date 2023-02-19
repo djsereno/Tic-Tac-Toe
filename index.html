@@ -13,10 +13,10 @@
   <body>
     <header></header>
     <main>
-      <!-- <h1>Tic Tac Toe</h1> -->
       <div class="player-container">
         <div class="player-info current" id="player1-info">
           <div class="name-group">
+            <span></span>
             <input class="player-name" id="player1-name" value="Player 1"></input>
             <span class="player-symbol player1"></span>
           </div>
@@ -33,6 +33,7 @@
           <div class="name-group">
             <span class="player-symbol player2"></span>
             <input class="player-name" id="player2-name" value="Player 2"></input>
+            <span></span>
           </div>
           <h3 class="score" id="player2-score">0</h3>
           <div class="switch-group">
@@ -44,6 +45,7 @@
           </div>
         </div>
       </div>
+      <h2 class="game-result">Player 1's turn</h2>
       <ul class="board">
         <li class="cell" data-index="0" style="border-top-left-radius: 30px;"></li>
         <li class="cell" data-index="1"></li>
@@ -59,7 +61,6 @@
         <button class="new-game">New Game</button>
         <button class="new-match">New Match</button>
       </div>
-      <h2 class="game-result"></h2>
     </main>
     <footer></footer>
   </body>

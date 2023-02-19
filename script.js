@@ -161,9 +161,11 @@ const gameController = (() => {
     if (currentPlayer === player1) {
       _player1Info.classList.add('current');
       _player2Info.classList.remove('current');
+      _gameResultNode.innerText = `${_player1Name.value}'s Turn`;
     } else {
       _player1Info.classList.remove('current');
       _player2Info.classList.add('current');
+      _gameResultNode.innerText = `${_player2Name.value}'s Turn`;
     }
 
     if (currentPlayer.getAiStatus()) {
@@ -173,10 +175,9 @@ const gameController = (() => {
   };
 
   const _startNewGame = () => {
-    console.log('-----NEW GAME-----');
     gameBoard.initBoard();
     _clearBoard();
-    _gameResultNode.innerText = '';
+    _gameResultNode.innerText = `${_player1Name.value}'s Turn`;
     _boardNode.classList.remove('game-over');
     _player1Info.classList.add('current');
     _player2Info.classList.remove('current');
