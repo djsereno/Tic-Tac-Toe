@@ -135,6 +135,8 @@ const gameController = (() => {
 
     if (result === 'Tie') {
       _gameResultNode.innerText = 'Tie Game!';
+      _player1Info.classList.remove('current');
+      _player2Info.classList.remove('current');
       return;
     } else if (result === player1) {
       _player1Score.innerText = player1.incrementScore();
@@ -153,9 +155,17 @@ const gameController = (() => {
   };
 
   const _initiateNextMove = () => {
+    if (gameBoard.getWinner()) return;
+
     const currentPlayer = gameBoard.getCurrentPlayer();
-    _player1Info.classList.toggle('current');
-    _player2Info.classList.toggle('current');
+    if (currentPlayer === player1) {
+      _player1Info.classList.add('current');
+      _player2Info.classList.remove('current');
+    } else {
+      _player1Info.classList.remove('current');
+      _player2Info.classList.add('current');
+    }
+
     if (currentPlayer.getAiStatus()) {
       let move = currentPlayer.makeMove(gameBoard.getEmptyCells());
       _pickCell(move);
