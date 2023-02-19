@@ -17,39 +17,43 @@
         <div class="player-info playerX current" id="playerX-info">
           <input class="name" id="playerX-name" value="Player 1" />
           <h3 class="score" id="playerX-score">0</h3>
-          <div class="switch-group">
+          <div class="options">
             <span class="player-symbol playerX bg-image"></span>
-            <label for="playerX-ai">AI Mode:</label>
-            <div class="switch">
-              <input type="checkbox" id="playerX-ai" />
-              <span class="slider round"></span>
+            <div class="switch-group">
+              <label for="playerX-ai">AI Mode:</label>
+              <div class="switch">
+                <input type="checkbox" id="playerX-ai" />
+                <span class="slider round"></span>
+              </div>
             </div>
           </div>
         </div>
         <div class="player-info playerO" id="playerO-info">
           <input class="name" id="playerO-name" value="Player 2" />
           <h3 class="score" id="playerO-score">0</h3>
-          <div class="switch-group">
+          <div class="options">
             <span class="player-symbol playerO bg-image"></span>
-            <label for="playerO-ai">AI Mode:</label>
-            <div class="switch">
-              <input type="checkbox" id="playerO-ai" />
-              <span class="slider round"></span>
+            <div class="switch-group">
+              <label for="playerO-ai">AI Mode:</label>
+              <div class="switch">
+                <input type="checkbox" id="playerO-ai" />
+                <span class="slider round"></span>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <h2 class="game-result">Player 1's turn</h2>
       <ul class="board">
-        <li class="cell" data-index="0" style="border-top-left-radius: 30px"></li>
+        <li class="cell" data-index="0" id="top-left"></li>
         <li class="cell" data-index="1"></li>
-        <li class="cell" data-index="2" style="border-top-right-radius: 30px"></li>
+        <li class="cell" data-index="2" id="top-right"></li>
         <li class="cell" data-index="3"></li>
         <li class="cell" data-index="4"></li>
         <li class="cell" data-index="5"></li>
-        <li class="cell" data-index="6" style="border-bottom-left-radius: 30px"></li>
+        <li class="cell" data-index="6" id="bottom-left"></li>
         <li class="cell" data-index="7"></li>
-        <li class="cell" data-index="8" style="border-bottom-right-radius: 30px"></li>
+        <li class="cell" data-index="8" id="bottom-right"></li>
       </ul>
       <div class="button-container">
         <button class="new-game">New Game</button>
