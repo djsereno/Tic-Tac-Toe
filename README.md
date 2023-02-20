@@ -5,6 +5,9 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
+  <a href="https://djsereno.github.io/Tic-Tac-Toe/">
+    <img src="./images/screenshot.png" alt="Logo" height="200">
+  </a>
 
 <h3 align="center">Tic-Tac-Toe</h3>
 
@@ -28,15 +31,15 @@
 
 The AI is implemented using a Monte Carlo based simulation. The steps to determine the next best move are as follows:
 
-1. Clone the existing game board in its current state. The cloned board will be used to run the simulations on.
-2. Make the initial move within the simulation at random. Take note of which cell was chosen. Note: The initial move referenced here is the initial move *within the simulation*, not necessarily the first move of the game.
+1. Clone the existing game board in its current state. All simulations will take place on the cloned board.
+2. Make the initial move within the simulation at random. Take note of which cell was chosen. Note: The initial move referenced here is the initial move _within the simulation_, not necessarily the first move of the game.
 3. Proceed making moves at random while correctly alternating between the current player and the opponent.
 4. Simulate the game until there is either a winner or until the game ends in a tie.
 5. Rank how good the initial move was based on the outcome of the game. In this implementation, a win awards the initial move +1 point, a tie +0.5 points, and a loss -1 point.
 6. Repeat steps 2-5 over and over. More simulations should result in a more accurate "best" initial move.
 7. After all simulations are complete, make a move on the real game board based on the highest ranked initial move from the simulation.
 
-Repeat these steps every time it is the AI's turn to make a move.
+These steps are repeated every time it is the AI's turn to make a move.
 
 ## Contact
 
