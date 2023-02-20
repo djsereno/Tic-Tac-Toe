@@ -38,59 +38,50 @@ const gameBoard = (() => {
   let _winner;
   let _winningCells;
 
-  const display = () => console.table(_board);
-  const getBoardArray = () => [..._board];
+  const checkValidPick = (index) => _emptyCells.includes(index) && !_winner;
+  const getEmptyCells = () => [..._emptyCells];
   const getWinner = () => _winner;
   const getWinningCells = () => _winningCells;
-  const getEmptyCells = () => [..._emptyCells];
 
   const initBoard = () => {
-    _board.fill('');
+    _board.fill();
     _emptyCells = Array(9).fill(0);
     _emptyCells = _emptyCells.map((val, i) => i);
     _winner = false;
+    _winningCells = false;
   };
 
   const pickCell = (index, player) => {
     if (!_emptyCells.includes(index)) return false;
 
-    _emptyCells.splice(_emptyCells.indexOf(index), 1);
     _board[index] = player.symbol;
-    _winningCells = _checkWinner();
-    if (_winningCells) {
-      _winningCells === -1 ? (_winner = 'Tie') : (_winner = player);
-    }
+    _emptyCells.splice(_emptyCells.indexOf(index), 1);
+    [_winner, _winningCells] = _checkWinner(player);
     return true;
   };
 
-  const checkValidPick = (index) => {
-    return _emptyCells.includes(index) && !_winner;
-  };
-
-  const _checkWinner = () => {
-    if (_board[0] !== '' && _board[0] == _board[1] && _board[0] == _board[2]) return [0, 1, 2];
-    if (_board[3] !== '' && _board[3] == _board[4] && _board[3] == _board[5]) return [3, 4, 5];
-    if (_board[6] !== '' && _board[6] == _board[7] && _board[6] == _board[8]) return [6, 7, 8];
-    if (_board[0] !== '' && _board[0] == _board[3] && _board[0] == _board[6]) return [0, 3, 6];
-    if (_board[1] !== '' && _board[1] == _board[4] && _board[1] == _board[7]) return [1, 4, 7];
-    if (_board[2] !== '' && _board[2] == _board[5] && _board[2] == _board[8]) return [2, 5, 8];
-    if (_board[0] !== '' && _board[0] == _board[4] && _board[0] == _board[8]) return [0, 4, 8];
-    if (_board[2] !== '' && _board[2] == _board[4] && _board[2] == _board[6]) return [2, 4, 6];
-    if (_board.findIndex((val) => val === '') === -1) return -1;
-    return false;
+  const _checkWinner = (player) => {
+    if (_board[0] && _board[0] == _board[1] && _board[0] == _board[2]) return [player, [0, 1, 2]];
+    if (_board[3] && _board[3] == _board[4] && _board[3] == _board[5]) return [player, [3, 4, 5]];
+    if (_board[6] && _board[6] == _board[7] && _board[6] == _board[8]) return [player, [6, 7, 8]];
+    if (_board[0] && _board[0] == _board[3] && _board[0] == _board[6]) return [player, [0, 3, 6]];
+    if (_board[1] && _board[1] == _board[4] && _board[1] == _board[7]) return [player, [1, 4, 7]];
+    if (_board[2] && _board[2] == _board[5] && _board[2] == _board[8]) return [player, [2, 5, 8]];
+    if (_board[0] && _board[0] == _board[4] && _board[0] == _board[8]) return [player, [0, 4, 8]];
+    if (_board[2] && _board[2] == _board[4] && _board[2] == _board[6]) return [player, [2, 4, 6]];
+    if (_emptyCells.length === 0) return ['Tie', []];
+    return [false, false];
   };
 
   initBoard();
 
   return {
-    getBoardArray,
+    checkValidPick,
     getEmptyCells,
     getWinner,
-    checkValidPick,
     getWinningCells,
     initBoard,
     pickCell,
-    display,
   };
 })();
 
