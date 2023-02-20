@@ -4,17 +4,13 @@ const Player = (playerName, playerSymbol) => {
   let name = playerName;
   let _score = 0;
   let _isAi = false;
+  let _AiMode = 'hard'; // This is currently hardcoded into the player, eventually add UI element to control
 
   const getAiStatus = () => _isAi;
   const toggleAI = () => (_isAi = !_isAi);
 
-  const getMove = (board) => {
-    return monteCarlo(symbol);
-  };
-
-  const getRandomMove = (board) => {
-    const options = board.getEmptyCells();
-    return options[Math.floor(Math.random() * options.length)];
+  const getMove = () => {
+    return _AiMode === 'hard' ? monteCarlo(symbol) : gameBoard.getRandomCell();
   };
 
   const incrementScore = () => {
@@ -33,7 +29,6 @@ const Player = (playerName, playerSymbol) => {
     domNodes,
     getAiStatus,
     getMove,
-    getRandomMove,
     incrementScore,
     initScore,
     name,
@@ -56,6 +51,7 @@ const Board = () => {
   const setBoardArray = (array) => (_board = [...array]);
   const getEmptyCells = () => [..._emptyCells];
   const setEmptyCells = (array) => (_emptyCells = [...array]);
+  const getRandomCell = () => _emptyCells[Math.floor(Math.random() * _emptyCells.length)];
   const getWinner = () => _winner;
   const getWinningCells = () => _winningCells;
 
@@ -97,6 +93,7 @@ const Board = () => {
     setBoardArray,
     getEmptyCells,
     setEmptyCells,
+    getRandomCell,
     getWinner,
     getWinningCells,
     initBoard,
@@ -136,7 +133,7 @@ const gameController = (() => {
     playerO.domNodes.info.classList.toggle('current');
     gameResultNode.innerText = `${currentPlayer.name}'s Turn`;
 
-    if (currentPlayer.getAiStatus()) makeMove(currentPlayer.getMove(gameBoard));
+    if (currentPlayer.getAiStatus()) makeMove(currentPlayer.getMove());
   };
 
   const handleGameEnd = (winner) => {
@@ -173,7 +170,7 @@ const gameController = (() => {
     playerO.domNodes.info.classList.remove('current');
     clearBoardDisplay();
 
-    if (currentPlayer.getAiStatus()) makeMove(currentPlayer.getMove(gameBoard));
+    if (currentPlayer.getAiStatus()) makeMove(currentPlayer.getMove());
   };
 
   const startNewMatch = () => {
@@ -185,7 +182,7 @@ const gameController = (() => {
   const toggleAi = (player) => {
     player.toggleAI();
     if (player.getAiStatus() && player === currentPlayer && !gameBoard.getWinner())
-      makeMove(player.getMove(gameBoard));
+      makeMove(player.getMove());
   };
 
   const setDomNodes = (player) => {
@@ -232,13 +229,13 @@ const monteCarlo = (symbol) => {
     boardClone.setEmptyCells(gameBoard.getEmptyCells());
 
     // Make the first move at random
-    let firstMove = target.getRandomMove(boardClone);
+    let firstMove = boardClone.getRandomCell();
     boardClone.pickCell(firstMove, target);
 
     // Simulate the game on the cloned board by making moves at random until game over
     while (!boardClone.getWinner()) {
       current = +!current;
-      let move = players[current].getRandomMove(boardClone);
+      let move = boardClone.getRandomCell();
       boardClone.pickCell(move, players[current]);
     }
 
