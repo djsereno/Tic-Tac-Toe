@@ -8,8 +8,12 @@ const Player = (playerName, playerSymbol) => {
   const getAiStatus = () => _isAi;
   const toggleAI = () => (_isAi = !_isAi);
 
-  const getMove = () => {
-    const options = gameBoard.getEmptyCells();
+  const getMove = (board) => {
+    return monteCarlo(symbol);
+  };
+
+  const getRandomMove = (board) => {
+    const options = board.getEmptyCells();
     return options[Math.floor(Math.random() * options.length)];
   };
 
@@ -29,6 +33,7 @@ const Player = (playerName, playerSymbol) => {
     domNodes,
     getAiStatus,
     getMove,
+    getRandomMove,
     incrementScore,
     initScore,
     name,
@@ -37,17 +42,20 @@ const Player = (playerName, playerSymbol) => {
   };
 };
 
-playerX = Player('Player 1', 'X');
-playerO = Player('Player 2', 'O');
+const playerX = Player('Player 1', 'X');
+const playerO = Player('Player 2', 'O');
 
-const gameBoard = (() => {
-  const _board = Array(9);
+const Board = () => {
+  let _board = Array(9);
   let _emptyCells;
   let _winner;
   let _winningCells;
 
   const checkValidPick = (index) => _emptyCells.includes(index) && !_winner;
+  const getBoardArray = () => [..._board];
+  const setBoardArray = (array) => (_board = [...array]);
   const getEmptyCells = () => [..._emptyCells];
+  const setEmptyCells = (array) => (_emptyCells = [...array]);
   const getWinner = () => _winner;
   const getWinningCells = () => _winningCells;
 
@@ -85,13 +93,18 @@ const gameBoard = (() => {
 
   return {
     checkValidPick,
+    getBoardArray,
+    setBoardArray,
     getEmptyCells,
+    setEmptyCells,
     getWinner,
     getWinningCells,
     initBoard,
     pickCell,
   };
-})();
+};
+
+const gameBoard = Board();
 
 const gameController = (() => {
   const boardNode = document.querySelector('.board');
@@ -123,7 +136,7 @@ const gameController = (() => {
     playerO.domNodes.info.classList.toggle('current');
     gameResultNode.innerText = `${currentPlayer.name}'s Turn`;
 
-    if (currentPlayer.getAiStatus()) makeMove(currentPlayer.getMove());
+    if (currentPlayer.getAiStatus()) makeMove(currentPlayer.getMove(gameBoard));
   };
 
   const handleGameEnd = (winner) => {
@@ -160,7 +173,7 @@ const gameController = (() => {
     playerO.domNodes.info.classList.remove('current');
     clearBoardDisplay();
 
-    if (currentPlayer.getAiStatus()) makeMove(currentPlayer.getMove());
+    if (currentPlayer.getAiStatus()) makeMove(currentPlayer.getMove(gameBoard));
   };
 
   const startNewMatch = () => {
@@ -172,7 +185,7 @@ const gameController = (() => {
   const toggleAi = (player) => {
     player.toggleAI();
     if (player.getAiStatus() && player === currentPlayer && !gameBoard.getWinner())
-      makeMove(player.getMove());
+      makeMove(player.getMove(gameBoard));
   };
 
   const setDomNodes = (player) => {
@@ -198,3 +211,53 @@ const gameController = (() => {
 
   return {};
 })();
+
+const monteCarlo = (symbol) => {
+  let opponentSymbol;
+  symbol === 'X' ? (opponentSymbol = 'O') : (opponentSymbol = 'X');
+
+  const target = Player('target', symbol);
+  const opponent = Player('opponent', opponentSymbol);
+  const players = [target, opponent];
+  let current = 0;
+
+  // Keep track of the win rates based on the first move
+  const winRates = {};
+  gameBoard.getEmptyCells().forEach((option) => (winRates[option] = 0));
+
+  for (let i = 0; i < 10000; i++) {
+    // Clone the existing game board to run the simulations on
+    const boardClone = Board();
+    boardClone.setBoardArray(gameBoard.getBoardArray());
+    boardClone.setEmptyCells(gameBoard.getEmptyCells());
+
+    // Make the first move at random
+    let firstMove = target.getRandomMove(boardClone);
+    boardClone.pickCell(firstMove, target);
+
+    // Simulate the game on the cloned board by making moves at random until game over
+    while (!boardClone.getWinner()) {
+      current = +!current;
+      let move = players[current].getRandomMove(boardClone);
+      boardClone.pickCell(move, players[current]);
+    }
+
+    // Determine the winner of the simulation and rank the first move based on the outcome of the game
+    let winner = boardClone.getWinner();
+    if (winner === target) winRates[firstMove] += 1;
+    if (winner === 'Tie') winRates[firstMove] += 0.5;
+    if (winner === opponent) winRates[firstMove] -= 1;
+  }
+
+  // Return the best performing first move
+  let bestMove;
+  let bestRank = -Infinity;
+  Object.keys(winRates).forEach((key) => {
+    if (winRates[key] >= bestRank) {
+      bestRank = winRates[key];
+      bestMove = key;
+    }
+  });
+
+  return +bestMove;
+};
