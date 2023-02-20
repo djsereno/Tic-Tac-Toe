@@ -76,7 +76,7 @@ const gameBoard = (() => {
     if (_board[1] && _board[1] == _board[4] && _board[1] == _board[7]) return [player, [1, 4, 7]];
     if (_board[2] && _board[2] == _board[5] && _board[2] == _board[8]) return [player, [2, 5, 8]];
     if (_board[0] && _board[0] == _board[4] && _board[0] == _board[8]) return [player, [0, 4, 8]];
-    if (_board[2] && _board[2] == _board[4] && _board[2] == _board[6]) return [player, [2, 4, 6]];
+    if (_board[2] && _board[2] == _board[4] && _board[2] == _board[6]) return [player, [6, 4, 2]];
     if (_emptyCells.length === 0) return ['Tie', []];
     return [false, false];
   };

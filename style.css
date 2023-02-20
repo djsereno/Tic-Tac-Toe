@@ -19,6 +19,14 @@
   --color-O-accent: #195974;
 }
 
+.playerX {
+  background-color: var(--color-X-bg);
+}
+
+.playerO {
+  background-color: var(--color-O-bg);
+}
+
 body {
   background-color: var(--color-background);
 }
@@ -29,13 +37,7 @@ main {
   align-items: center;
 }
 
-.playerX {
-  background-color: var(--color-X-bg);
-}
-
-.playerO {
-  background-color: var(--color-O-bg);
-}
+/* SCOREBOARD */
 
 .scoreboard {
   margin-top: 50px;
@@ -64,13 +66,8 @@ main {
   background-color: var(--color-player-info);
 }
 
-.name-score-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .name,
+.game-result,
 button {
   font-size: 1.5rem;
   font-weight: bold;
@@ -114,24 +111,23 @@ button {
   width: 3rem;
   place-items: center;
   border-radius: 5px;
+  border: 3px solid;
 }
 
 .player-symbol.playerX {
-  border: 3px solid var(--color-X-accent);
+  border-color: var(--color-X-accent);
   color: var(--color-X-accent);
 }
 
 .player-symbol.playerO {
-  border: 3px solid var(--color-O-accent);
+  border-color: var(--color-O-accent);
   color: var(--color-O-accent);
 }
 
-.switch-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1.2rem;
-  user-select: none;
+/* GAME BOARD */
+
+.game-result {
+  margin: 25px;
 }
 
 .board {
@@ -152,9 +148,9 @@ button {
   place-content: center;
   border: none;
   border-radius: 8px;
-  user-select: none;
   font-size: 100px;
   line-height: 0;
+  user-select: none;
 }
 
 #top-left {
@@ -187,24 +183,23 @@ button {
   position: relative;
 }
 
-.player-symbol::before,
-.cell.picked::before {
-  content: '';
-  margin: 15%;
-  background-size: cover;
+.cell.picked::before,
+.player-symbol::before {
   position: absolute;
   top: 0px;
   right: 0px;
   bottom: 0px;
   left: 0px;
+  margin: 15%;
+  background-size: cover;
   opacity: 0.5;
+  content: '';
 }
 
-.playerX.bg-image::before {
+.bg-image.playerX::before {
   background-image: url('./images/X.png');
 }
-
-.playerO.bg-image::before {
+.bg-image.playerO::before {
   background-image: url('./images/O.png');
 }
 
@@ -218,6 +213,8 @@ button {
 .cell.winner.delay2 {
   animation-delay: 0.3s;
 }
+
+/* BUTTONS */
 
 .button-container {
   margin: 20px;
@@ -240,11 +237,6 @@ button:hover {
   cursor: pointer;
 }
 
-.game-result {
-  margin: 25px;
-  font-size: 2rem;
-}
-
 @keyframes pulse {
   0%,
   25% {
@@ -257,7 +249,7 @@ button:hover {
 
 /* SLIDER */
 :root {
-  /* these can be customized */
+  /* customize these */
   --slider-height: 28px;
   --slider-padding: 4px;
   --switch-width: var(--switch-height);
@@ -271,10 +263,20 @@ button:hover {
   --slider-width: calc(var(--switch-width) + var(--switch-translate) + 2 * var(--slider-padding));
 }
 
+/* The label + switch group */
+.switch-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  user-select: none;
+}
+
 /* The switch - the box around the slider */
 .switch {
   position: relative;
   display: inline-block;
+  display: grid;
   width: var(--slider-width);
   height: var(--slider-height);
 }
