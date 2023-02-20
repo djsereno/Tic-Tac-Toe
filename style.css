@@ -221,7 +221,8 @@ button {
 
 .button-container {
   margin: 20px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
