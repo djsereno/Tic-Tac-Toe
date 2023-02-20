@@ -29,8 +29,7 @@
 The AI is implemented using a Monte Carlo based simulation. The steps to determine the next best move are as follows:
 
 1. Clone the existing game board in its current state. The cloned board will be used to run the simulations on.
-2. Make the initial move within the simulation at random. Take note of which cell was chosen.
-  - Note: The initial move referenced here is the initial move *within the simulation*, not necessarily the first move of the game.
+2. Make the initial move within the simulation at random. Take note of which cell was chosen. Note: The initial move referenced here is the initial move *within the simulation*, not necessarily the first move of the game.
 3. Proceed making moves at random while correctly alternating between the current player and the opponent.
 4. Simulate the game until there is either a winner or until the game ends in a tie.
 5. Rank how good the initial move was based on the outcome of the game. In this implementation, a win awards the initial move +1 point, a tie +0.5 points, and a loss -1 point.
