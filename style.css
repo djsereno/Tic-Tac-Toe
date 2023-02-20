@@ -43,7 +43,6 @@ main {
 /* SCOREBOARD */
 
 .scoreboard {
-  /* margin-top: 50px; */
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
@@ -96,7 +95,7 @@ button {
 }
 
 .name:focus {
-  outline: 3px dashed var(--color-border);
+  outline: 3px solid var(--color-light);
   border-radius: 5px;
   text-decoration: none;
 }
@@ -234,10 +233,16 @@ button {
   background-color: var(--color-light);
 }
 
+button:hover,
+button:focus {
+  transform: scale(1.1);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
 button:hover {
-  filter: brightness(0.9);
-  transform: scale(1.05);
   cursor: pointer;
+}
+button:focus {
+  outline: 3px solid var(--color-light);
 }
 
 @keyframes pulse {
@@ -318,6 +323,10 @@ button:hover {
 
 input:checked + .slider {
   background-color: var(--color-slider-on);
+}
+
+input:focus + .slider {
+  box-shadow: var(--color-light) 0px 0px 0px 3px;
 }
 
 input:checked + .slider:before {
