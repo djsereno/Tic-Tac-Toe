@@ -10,6 +10,7 @@
 
 :root {
   --color-background: #ffe066;
+  --color-footer: #eecf53;
   --color-border: #444;
   --color-player-info: #777;
   --color-light: #eee;
@@ -330,4 +331,69 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: var(--switch-height);
+}
+
+/* FOOTER */
+
+footer {
+  position: fixed;
+  bottom: 0;
+  height: 40px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  background-color: var(--color-footer);
+  font-size: 1rem;
+}
+
+footer .center-container {
+  grid-column: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+footer .right-container {
+  padding: 5px;
+  grid-column: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: flex-end;
+}
+
+footer .right-container a {
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 0.8rem;
+}
+
+footer a,
+footer a:visited {
+  text-decoration: none;
+}
+
+footer a:hover,
+footer a:active {
+  text-decoration: underline;
+}
+
+footer i {
+  font-size: 1.6em;
+}
+
+footer a.icon:hover {
+  transform: scale(1.1);
+}
+
+footer a.circled i {
+  height: 1.6em;
+  width: 1.6em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.8em;
+  background-color: var(--color-border);
+  color: var(--color-footer);
+  font-size: 1em;
 }

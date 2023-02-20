@@ -49,5 +49,5 @@ Project Link: [https://github.com/djsereno/Tic-Tac-Toe/](https://github.com/djse
 
 ## Acknowledgments
 
-- X and O icons by [flatvac](https://www.vecteezy.com/members/flatvac) at [Vecteezy.com](https://www.vecteezy.com/)
+- Icons by [flatvac](https://www.vecteezy.com/members/flatvac) at [Vecteezy.com](https://www.vecteezy.com/)
 - Favicon by [icons8](https://icons8.com/)
